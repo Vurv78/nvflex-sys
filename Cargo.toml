@@ -1,6 +1,6 @@
 [package]
 name = "nvflex-sys"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 authors = ["Vurv78 <vurvdevelops@gmail.com>"]
 description = "Simple bindings for NVIDIA's FleX library using bindgen"
@@ -18,7 +18,10 @@ crate-type = ["lib"]
 bindgen = "0.59.2"
 
 [features]
-default = ["D3D"]
+default = ["D3D", "Ext"]
+
+# Create bindings and link to Ext libs
+Ext = []
 
 # Linking
 D3D = []

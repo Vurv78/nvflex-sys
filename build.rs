@@ -24,7 +24,12 @@ fn main() {
 		.allowlist_function("NvFlex.*")
 		.allowlist_type("NvFlex.*")
 		.allowlist_var("NvFlex.*")
-		.allowlist_var("NV_FLEX_.*")
+		.allowlist_var("NV_FLEX_.*");
+
+	#[cfg(feature = "Ext")]
+	let bindings = bindings.clang_arg("-DUSE_NV_EXT");
+
+	let bindings = bindings
 		.generate()
 		.expect("Couldn't generate bindings!");
 
@@ -51,9 +56,19 @@ fn link() {
 	println!("cargo:rustc-link-search=native={}", path.display());
 
 	#[cfg(feature = "D3D")]
-	link_lib!("NvFlex{}D3D_x{}", VERSION, end);
+	{
+		link_lib!("NvFlex{}D3D_x{}", VERSION, end);
+		#[cfg(feature = "Ext")]
+		link_lib!("NvFlexExt{}D3D_x{}", VERSION, end);
+	}
+
 	#[cfg(feature = "CUDA")]
-	link_lib!("NvFlex{}CUDA_x{}", VERSION, end);
+	{
+		link_lib!("NvFlex{}CUDA_x{}", VERSION, end);
+
+		#[cfg(feature = "Ext")]
+		link_lib!("NvFlexExt{}CUDA_x{}", VERSION, end);
+	}
 }
 
 #[cfg(all(target_os = "linux"))]
@@ -71,9 +86,15 @@ fn link() {
 	println!("cargo:rustc-link-search=native={}", path.display());
 
 	#[cfg(feature = "D3D")]
-	link_lib!("NvFlex{}D3D_x64", VERSION);
+	panic!("D3D is not supported on Linux, enable the CUDA feature");
+
 	#[cfg(feature = "CUDA")]
-	link_lib!("NvFlex{}CUDA_x64", VERSION);
+	{
+		link_lib!("NvFlex{}CUDA_x64", VERSION);
+
+		#[cfg(feature = "Ext")]
+		link_lib!("NvFlexExt{}CUDA_x64", VERSION);
+	}
 }
 
 #[cfg(all(target_os = "android"))]
@@ -86,8 +107,13 @@ fn link() {
 	println!("cargo:rustc-link-search=native={}", path.display());
 
 	#[cfg(feature = "D3D")]
-	panic!("D3D is not supported on Android!");
+	panic!("D3D is not supported on Android, use the CUDA feature!");
 
 	#[cfg(feature = "CUDA")]
-	link_lib!("libNvFlex{}CUDA_aarch64", VERSION);
+	{
+		link_lib!("libNvFlex{}CUDA_aarch64", VERSION);
+
+		#[cfg(feature = "Ext")]
+		link_lib!("libNvFlexExt{}CUDA_aarch64", VERSION);
+	}
 }
