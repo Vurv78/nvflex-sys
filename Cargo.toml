@@ -1,6 +1,6 @@
 [package]
 name = "nvflex-sys"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 authors = ["Vurv78 <vurvdevelops@gmail.com>"]
 description = "Simple bindings for NVIDIA's FleX library using bindgen"

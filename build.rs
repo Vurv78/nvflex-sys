@@ -24,7 +24,10 @@ fn main() {
 		.allowlist_function("NvFlex.*")
 		.allowlist_type("NvFlex.*")
 		.allowlist_var("NvFlex.*")
-		.allowlist_var("NV_FLEX_.*");
+		.allowlist_var("NV_FLEX_.*")
+		.prepend_enum_name(false)
+		.layout_tests(false)
+		.derive_debug(true);
 
 	#[cfg(feature = "Ext")]
 	let bindings = bindings.clang_arg("-DUSE_NV_EXT");
